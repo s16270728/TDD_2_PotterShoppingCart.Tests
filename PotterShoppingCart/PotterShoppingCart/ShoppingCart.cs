@@ -22,7 +22,8 @@ namespace PotterShoppingCart
             this._discount = new Dictionary<int, decimal>() {
                 {1, 1},
                 {2, 0.95M},
-                {3, 0.9M}
+                {3, 0.9M},
+                {4, 0.8M}
             };
         }
 
