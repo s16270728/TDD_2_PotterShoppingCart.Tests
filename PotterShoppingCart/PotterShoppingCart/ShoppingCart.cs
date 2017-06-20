@@ -9,6 +9,20 @@ namespace PotterShoppingCart
     public class ShoppingCart
     {
         /// <summary>
+        /// 書籍售價
+        /// </summary>
+        private decimal _bookPrice;
+
+        private decimal _discount;
+
+        public ShoppingCart()
+        {
+            this._bookPrice = 100;
+
+            this._discount = 0.95M;
+        }
+
+        /// <summary>
         /// Book class
         /// </summary>
         public class Book
@@ -31,7 +45,22 @@ namespace PotterShoppingCart
         /// <returns></returns>
         public decimal CalculateFee(IEnumerable<Book> books)
         {
-            var price = books.Sum(c => c.Count) * 100;
+            var booksCount = books.Sum(c => c.Count);
+
+            var booksDistinctCount = books.Select(c => c.Name).Distinct().Count();
+
+            var price = 0M;
+
+            if (booksDistinctCount >= 2) //大於兩本不一樣的書就打折
+            {
+                price = booksCount * this._bookPrice * this._discount;
+            }
+            else
+            {
+                price = booksCount * this._bookPrice;
+            }
+            
+
             return price;
         }  
     }
