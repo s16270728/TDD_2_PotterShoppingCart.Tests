@@ -23,7 +23,8 @@ namespace PotterShoppingCart
                 {1, 1},
                 {2, 0.95M},
                 {3, 0.9M},
-                {4, 0.8M}
+                {4, 0.8M},
+                {5, 0.75M}
             };
         }
 
