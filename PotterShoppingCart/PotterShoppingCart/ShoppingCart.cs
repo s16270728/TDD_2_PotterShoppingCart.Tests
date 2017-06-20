@@ -13,6 +13,9 @@ namespace PotterShoppingCart
         /// </summary>
         private decimal _bookPrice;
 
+        /// <summary>
+        /// 購買套裝數量折扣
+        /// </summary>
         private Dictionary<int, decimal> _discount;
 
         public ShoppingCart()
@@ -54,22 +57,30 @@ namespace PotterShoppingCart
             ///總金額
             var price = 0M;
 
-            var booksCount = books.Sum(c => c.Count);
-
-            var maxCountOfBooks = books.Max(c => c.Count);
-
-            for (int i = 1; i <= maxCountOfBooks; i++)
+            if (books != null && books.Count() > 0 && books.Sum(c=>c.Count) >0)
             {
-                var groupBooks = books.Where(c => c.Count >= i);
+                //書籍中購買最多的數量
+                var maxCountOfBooks = books.Max(c => c.Count);
 
-                var booksDistinctCount = groupBooks.Select(c => c.Name).Distinct().Count();
+                //分層計算數量折扣
+                for (int i = 1; i <= maxCountOfBooks; i++)
+                {
+                    var groupBooks = books.Where(c => c.Count >= i);
 
-                var bookDiscount = getDiscount(booksDistinctCount);
+                    var booksDistinctCount = groupBooks.Select(c => c.Name).Distinct().Count();
 
-                price += booksDistinctCount * this._bookPrice * bookDiscount;
+                    var bookDiscount = getDiscount(booksDistinctCount);
+
+                    price += booksDistinctCount * this._bookPrice * bookDiscount;
+                }
+
+                return price;
             }
-
-            return price;
+            else
+            {
+                return 0;
+            }
+            
         }
 
         /// <summary>
