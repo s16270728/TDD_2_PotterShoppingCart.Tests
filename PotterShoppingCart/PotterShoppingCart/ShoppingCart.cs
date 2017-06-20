@@ -13,13 +13,17 @@ namespace PotterShoppingCart
         /// </summary>
         private decimal _bookPrice;
 
-        private decimal _discount;
+        private Dictionary<int, decimal> _discount;
 
         public ShoppingCart()
         {
             this._bookPrice = 100;
 
-            this._discount = 0.95M;
+            this._discount = new Dictionary<int, decimal>() {
+                {1, 1},
+                {2, 0.95M},
+                {3, 0.9M}
+            };
         }
 
         /// <summary>
@@ -45,23 +49,33 @@ namespace PotterShoppingCart
         /// <returns></returns>
         public decimal CalculateFee(IEnumerable<Book> books)
         {
+            ///總金額
+            var price = 0M;
+
             var booksCount = books.Sum(c => c.Count);
 
             var booksDistinctCount = books.Select(c => c.Name).Distinct().Count();
 
-            var price = 0M;
+            var bookDiscount = getDiscount(booksDistinctCount);
 
-            if (booksDistinctCount >= 2) //大於兩本不一樣的書就打折
-            {
-                price = booksCount * this._bookPrice * this._discount;
-            }
-            else
-            {
-                price = booksCount * this._bookPrice;
-            }
+            price = booksCount * this._bookPrice * bookDiscount;
             
-
             return price;
         }  
+
+        /// <summary>
+        /// 計算購買書籍折扣
+        /// </summary>
+        /// <param name="booksDistinctCount"></param>
+        /// <returns></returns>
+        private decimal getDiscount(int booksDistinctCount)
+        {
+            var bookDiscount = (from item in this._discount
+                                where item.Key <= booksDistinctCount
+                                orderby item.Key descending
+                                select item.Value).FirstOrDefault();
+
+            return bookDiscount;
+        }
     }
 }

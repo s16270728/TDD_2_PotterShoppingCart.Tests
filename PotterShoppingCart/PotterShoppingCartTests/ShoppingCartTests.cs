@@ -87,7 +87,7 @@ namespace PotterShoppingCart.Tests
             var actual = target.CalculateFee(books);
 
             //assert
-            var expected = 190;
+            var expected = 270;
             Assert.AreEqual(expected, actual);
         }
     }
