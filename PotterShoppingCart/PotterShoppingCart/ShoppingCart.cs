@@ -56,14 +56,21 @@ namespace PotterShoppingCart
 
             var booksCount = books.Sum(c => c.Count);
 
-            var booksDistinctCount = books.Select(c => c.Name).Distinct().Count();
+            var maxCountOfBooks = books.Max(c => c.Count);
 
-            var bookDiscount = getDiscount(booksDistinctCount);
+            for (int i = 1; i <= maxCountOfBooks; i++)
+            {
+                var groupBooks = books.Where(c => c.Count >= i);
 
-            price = booksCount * this._bookPrice * bookDiscount;
-            
+                var booksDistinctCount = groupBooks.Select(c => c.Name).Distinct().Count();
+
+                var bookDiscount = getDiscount(booksDistinctCount);
+
+                price += booksDistinctCount * this._bookPrice * bookDiscount;
+            }
+
             return price;
-        }  
+        }
 
         /// <summary>
         /// 計算購買書籍折扣
