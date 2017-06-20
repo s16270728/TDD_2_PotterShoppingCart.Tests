@@ -90,5 +90,41 @@ namespace PotterShoppingCart.Tests
             var expected = 270;
             Assert.AreEqual(expected, actual);
         }
+
+        /// <summary>
+        /// 一二三四集各買了一本，價格應為100*4*0.8=320
+        /// </summary>
+        [TestMethod()]
+        public void CalculateFeeTest_Book1_1_Book2_1_Book3_1_Book4_1_Return_320()
+        {
+            //arrange
+            var target = new ShoppingCart();
+            var books = new List<Book>()
+            {
+                new Book(){
+                    Name = "HarryPotter1",
+                    Count =1
+                },
+                new Book(){
+                    Name = "HarryPotter2",
+                    Count =1
+                },
+                new Book(){
+                    Name = "HarryPotter3",
+                    Count =1
+                },
+                new Book(){
+                    Name = "HarryPotter4",
+                    Count =1
+                }
+            };
+
+            //act
+            var actual = target.CalculateFee(books);
+
+            //assert
+            var expected = 320;
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
