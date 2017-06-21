@@ -54,33 +54,37 @@ namespace PotterShoppingCart
         /// <returns></returns>
         public decimal CalculateFee(IEnumerable<Book> books)
         {
-            ///總金額
-            var price = 0M;
-
             if (books != null && books.Count() > 0 && books.Sum(c=>c.Count) >0)
             {
-                //書籍中購買最多的數量
-                var maxCountOfBooks = books.Max(c => c.Count);
+                var groupedBooks = groupBooks(books);
 
-                //分層計算數量折扣
-                for (int i = 1; i <= maxCountOfBooks; i++)
-                {
-                    var groupBooks = books.Where(c => c.Count >= i);
-
-                    var booksDistinctCount = groupBooks.Select(c => c.Name).Distinct().Count();
-
-                    var bookDiscount = getDiscount(booksDistinctCount);
-
-                    price += booksDistinctCount * this._bookPrice * bookDiscount;
-                }
-
+                var price = (from g in groupedBooks
+                             let booksCount = g.Count()
+                             select booksCount * getDiscount(booksCount) * this._bookPrice).Sum();
+                
                 return price;
             }
             else
             {
                 return 0;
+            } 
+        }
+
+        /// <summary>
+        /// 將書根據套本分組
+        /// </summary>
+        /// <param name="books"></param>
+        /// <returns></returns>
+        private IEnumerable<IEnumerable<Book>> groupBooks(IEnumerable<Book> books)
+        {
+            //書籍中購買最多的數量
+            var maxCountOfBooks = books.Max(c => c.Count);
+
+            //一次傳回一套
+            for (int i = 1; i <= maxCountOfBooks; i++)
+            {
+                yield return books.Where(c => c.Count >= i);
             }
-            
         }
 
         /// <summary>
