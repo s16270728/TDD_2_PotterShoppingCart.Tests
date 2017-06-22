@@ -30,23 +30,7 @@ namespace PotterShoppingCart
                 {5, 0.75M}
             };
         }
-
-        /// <summary>
-        /// Book class
-        /// </summary>
-        public class Book
-        {
-            /// <summary>
-            /// Book name
-            /// </summary>
-            public string Name { get; set; }
-
-            /// <summary>
-            /// 購買數量
-            /// </summary>
-            public int Count { get; set; }
-        }
-
+        
         /// <summary>
         /// 計算書籍購買金額
         /// </summary>
@@ -54,20 +38,20 @@ namespace PotterShoppingCart
         /// <returns></returns>
         public decimal CalculateFee(IEnumerable<Book> books)
         {
-            if (books != null && books.Count() > 0 && books.Sum(c=>c.Count) >0)
-            {
-                var groupedBooks = groupBooks(books);
+            //if (books != null && books.Count() > 0 && books.Sum(c=>c.Count) >0)
+            //{
+                var groupedBooks = GroupBooks(books);
 
                 var price = (from g in groupedBooks
                              let booksCount = g.Count()
-                             select booksCount * getDiscount(booksCount) * this._bookPrice).Sum();
+                             select booksCount * GetDiscount(booksCount) * this._bookPrice).Sum();
                 
                 return price;
-            }
-            else
-            {
-                return 0;
-            } 
+            //}
+            //else
+            //{
+            //    return 0;
+            //} 
         }
 
         /// <summary>
@@ -75,7 +59,7 @@ namespace PotterShoppingCart
         /// </summary>
         /// <param name="books"></param>
         /// <returns></returns>
-        private IEnumerable<IEnumerable<Book>> groupBooks(IEnumerable<Book> books)
+        private IEnumerable<IEnumerable<Book>> GroupBooks(IEnumerable<Book> books)
         {
             //書籍中購買最多的數量
             var maxCountOfBooks = books.Max(c => c.Count);
@@ -92,14 +76,31 @@ namespace PotterShoppingCart
         /// </summary>
         /// <param name="booksDistinctCount"></param>
         /// <returns></returns>
-        private decimal getDiscount(int booksDistinctCount)
+        private decimal GetDiscount(int booksDistinctCount)
         {
-            var bookDiscount = (from item in this._discount
-                                where item.Key <= booksDistinctCount
-                                orderby item.Key descending
-                                select item.Value).FirstOrDefault();
+            //var bookDiscount = (from item in this._discount
+            //                    where item.Key <= booksDistinctCount
+            //                    orderby item.Key descending
+            //                    select item.Value).FirstOrDefault();
+            var bookDiscount = this._discount[booksDistinctCount];
 
             return bookDiscount;
         }
+    }
+
+    /// <summary>
+    /// Book class
+    /// </summary>
+    public class Book
+    {
+        /// <summary>
+        /// Book name
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 購買數量
+        /// </summary>
+        public int Count { get; set; }
     }
 }
